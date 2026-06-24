@@ -15,4 +15,8 @@ public interface AtendimentoRepository extends JpaRepository<Atendimento, UUID> 
     List<Atendimento> findByStatus(StatusAtendimento status);
 
     long countByAssuntoAndStatus(AssuntoAtendimento assunto, StatusAtendimento status);
+
+    List<Atendimento> findByAtendenteId(UUID atendenteId);
+
+    long countByStatus(StatusAtendimento status);
 }
