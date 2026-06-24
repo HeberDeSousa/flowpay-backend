@@ -1,0 +1,37 @@
+version: '3.9'
+
+services:
+  backend:
+
+    build: ./backend
+
+    ports:
+      - "8080:8080"
+
+  frontend:
+
+    build: ./frontend
+
+    ports:
+      - "4200:80"
+#  postgres:
+#
+#    image: postgres:17
+#
+#    container_name: flowpay-postgres
+#
+#    restart: always
+#
+#    environment:
+#      POSTGRES_DB: flowpay
+#      POSTGRES_USER: postgres
+#      POSTGRES_PASSWORD: postgres
+#
+#    ports:
+#      - "5432:5432"
+#
+#    volumes:
+#      - postgres_data:/var/lib/postgresql/data
+#
+#volumes:
+#  postgres_data:

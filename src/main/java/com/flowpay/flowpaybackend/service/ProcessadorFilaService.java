@@ -5,8 +5,10 @@ import com.flowpay.flowpaybackend.model.enums.StatusAtendimento;
 import com.flowpay.flowpaybackend.repository.AtendimentoRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -20,8 +22,8 @@ public class ProcessadorFilaService {
     private final DashboardService dashboardService;
     private final DashboardPublisher publisher;
 
-    @Scheduled(fixedDelay = 1000)
-    public void processarFila() {
+    @Transactional
+    public synchronized void processarFila() {
 
         List<Atendimento> aguardando =
                 atendimentoRepository.findByStatus(
