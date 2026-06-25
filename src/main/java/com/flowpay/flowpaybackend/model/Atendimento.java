@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.UUID;
 
 @Entity
@@ -47,7 +48,7 @@ public class Atendimento {
     public void prePersist() {
 
         if (criadoEm == null) {
-            criadoEm = LocalDateTime.now();
+            criadoEm = LocalDateTime.now(ZoneId.of("America/Sao_Paulo"));
         }
     }
 }

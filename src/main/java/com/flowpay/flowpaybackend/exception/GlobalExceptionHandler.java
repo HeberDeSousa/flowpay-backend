@@ -10,10 +10,13 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    private static final String SP_ZONE = "America/Sao_Paulo";
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<ApiError> notFound(
@@ -23,7 +26,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(
                         new ApiError(
-                                LocalDateTime.now(),
+                                LocalDateTime.now(ZoneId.of(SP_ZONE)),
                                 404,
                                 "NOT_FOUND",
                                 ex.getMessage(),
@@ -50,7 +53,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest()
                 .body(
                         new ApiError(
-                                LocalDateTime.now(),
+                                LocalDateTime.now(ZoneId.of(SP_ZONE)),
                                 400,
                                 "VALIDATION_ERROR",
                                 message,
@@ -67,7 +70,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest()
                 .body(
                         new ApiError(
-                                LocalDateTime.now(),
+                                LocalDateTime.now(ZoneId.of(SP_ZONE)),
                                 400,
                                 "CONSTRAINT_ERROR",
                                 ex.getMessage(),
@@ -84,7 +87,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.internalServerError()
                 .body(
                         new ApiError(
-                                LocalDateTime.now(),
+                                LocalDateTime.now(ZoneId.of(SP_ZONE)),
                                 500,
                                 "INTERNAL_SERVER_ERROR",
                                 ex.getMessage(),

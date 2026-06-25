@@ -5,7 +5,6 @@ import com.flowpay.flowpaybackend.model.enums.AssuntoAtendimento;
 import com.flowpay.flowpaybackend.model.enums.StatusAtendimento;
 import com.flowpay.flowpaybackend.repository.AtendimentoRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service

@@ -1,5 +1,7 @@
 package com.flowpay.flowpaybackend.service;
 
+import com.flowpay.flowpaybackend.event.AtendimentoCriadoEvent;
+import com.flowpay.flowpaybackend.event.AtendimentoFinalizadoEvent;
 import com.flowpay.flowpaybackend.model.Atendente;
 import com.flowpay.flowpaybackend.model.Atendimento;
 import com.flowpay.flowpaybackend.model.dto.AtendimentoResponse;
@@ -11,9 +13,12 @@ import com.flowpay.flowpaybackend.repository.AtendenteRepository;
 import com.flowpay.flowpaybackend.repository.AtendimentoRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
@@ -26,7 +31,9 @@ public class DistribuicaoService {
 
     private final AtendimentoRepository atendimentoRepository;
     private final AtendenteRepository atendenteRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
+    @Transactional
     public AtendimentoResponse criar(
             NovoAtendimentoRequest request) {
 
@@ -41,6 +48,9 @@ public class DistribuicaoService {
                 atendimentoRepository.save(atendimento);
 
         distribuir(salvo);
+
+        eventPublisher.publishEvent(
+                new AtendimentoCriadoEvent(salvo.getId()));
 
         return toResponse(
                 atendimentoRepository.findById(
@@ -74,11 +84,12 @@ public class DistribuicaoService {
                 StatusAtendimento.EM_ATENDIMENTO);
 
         atendimento.setIniciadoEm(
-                LocalDateTime.now());
+                LocalDateTime.now(ZoneId.of("America/Sao_Paulo")));
 
         atendimentoRepository.save(atendimento);
     }
 
+    @Transactional
     public void finalizar(UUID id) {
 
         Atendimento atendimento =
@@ -90,9 +101,12 @@ public class DistribuicaoService {
                 StatusAtendimento.FINALIZADO);
 
         atendimento.setFinalizadoEm(
-                LocalDateTime.now());
+                LocalDateTime.now(ZoneId.of("America/Sao_Paulo")));
 
         atendimentoRepository.save(atendimento);
+
+        eventPublisher.publishEvent(
+                new AtendimentoFinalizadoEvent(id));
     }
 
     private boolean possuiCapacidade(
